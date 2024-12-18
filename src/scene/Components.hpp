@@ -48,4 +48,19 @@ namespace ENGINE
 		CameraComponent(const CameraComponent&) = default;
 	};
 
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
+
+        ScriptableEntity*(*InstantiateScript)(); //function pointer
+		void (*DestroyScript)(NativeScriptComponent*); // take in a pointer to himself(a NativeScriptComponent)
+
+		template<typename T>
+		void Bind()
+		{
+			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
+			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
+		}
+	};
+
 }

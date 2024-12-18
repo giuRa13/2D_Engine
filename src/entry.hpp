@@ -6,6 +6,7 @@
 
 #ifdef _WIN32
 	#include <Windows.h>
+	#define NOMINMAX
 #endif
 
 extern ENGINE::Application* ENGINE::CreateApplication();

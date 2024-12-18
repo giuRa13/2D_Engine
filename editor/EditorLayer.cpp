@@ -36,6 +36,35 @@ namespace ENGINE
 		m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
 		cc.Primary = false;
+
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+				//auto& transform = GetComponent<TransformComponent>().Transform;
+				//transform[3][0] = rand() % 10 - 5.0f;
+			}
+			void OnDestroy()
+			{
+			}
+			void OnUpdate(TimeStep ts)
+			{
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				float speed = 5.0f;
+				if (Input::IsKeyPressed(ENGINE_KEY_A))
+					transform[3][0] -= speed * ts; // [3] = third column of the matrix, [0] = x
+				if (Input::IsKeyPressed(ENGINE_KEY_D))
+					transform[3][0] += speed * ts;
+				if (Input::IsKeyPressed(ENGINE_KEY_W))
+					transform[3][1] += speed * ts;
+				if (Input::IsKeyPressed(ENGINE_KEY_S))
+					transform[3][1] -= speed * ts;
+			}
+		};
+		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -57,7 +86,7 @@ namespace ENGINE
 			}
 
 		// Update
-		if (m_ViewportFocused)
+		/*if (m_ViewportFocused)
 		{
 			m_CameraController.OnUpdate(ts);
 
@@ -69,7 +98,7 @@ namespace ENGINE
 				m_SquarePosition.y -= m_SquareMoveSpeed *ts;
 			else if (Input::IsKeyPressed(ENGINE_KEY_I))
 				m_SquarePosition.y += m_SquareMoveSpeed *ts;
-		}
+		}*/
 
 		static float rotation = 0.0f;
 		rotation += ts * 50.0f;
@@ -221,8 +250,8 @@ namespace ENGINE
 		ImGui::Separator();
 
 		ImGui::NewLine();
-		uint32_t texID = m_CheckerboardTexture->GetRendererID();
-		ImGui::Image((void*)texID, ImVec2{ 256.0f, 256.0f }, ImVec2{0, 1}, ImVec2{1, 0});
+		uint64_t texID = m_CheckerboardTexture->GetRendererID();
+		ImGui::Image(reinterpret_cast<void*>(texID), ImVec2{ 256.0f, 256.0f }, ImVec2{0, 1}, ImVec2{1, 0});
 		ImGui::End();
 
 		////////////////////////////////////////////////
@@ -241,8 +270,8 @@ namespace ENGINE
 			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 			m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
 		}*/
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image((void*)textureID, ImVec2{  m_ViewportSize.x,  m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{  m_ViewportSize.x,  m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 		ImGui::End();
 		ImGui::PopStyleVar();
 

@@ -60,6 +60,22 @@ namespace ENGINE
 
 	void Scene::OnUpdate(TimeStep ts)
 	{
+        // Update scripts ////////////////////////////////
+		{
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+			{
+				if (!nsc.Instance)
+				{
+					nsc.Instance = nsc.InstantiateScript();
+					nsc.Instance->m_Entity = Entity{ entity, this };
+					nsc.Instance->OnCreate();
+				}
+				
+                nsc.Instance->OnUpdate(ts);
+			});
+		}
+
+        // Render 2D ////////////////////////////////
         Camera* mainCamera = nullptr;
 		glm::mat4* cameraTransform = nullptr;
 		{
@@ -89,13 +105,6 @@ namespace ENGINE
 			Renderer2D::EndScene();
 		}
 		
-        
-        /*auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
-		{
-			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuad(transform, sprite.Color);
-		}*/
 	}
 
 }
