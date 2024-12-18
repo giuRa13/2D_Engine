@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include "Entity.hpp"
 #include "Components.hpp"
 #include <renderer/Renderer2D.hpp>
 #include <glm/glm.hpp>
@@ -30,9 +31,15 @@ namespace ENGINE
 	{
 	}
 
-	entt::entity Scene::CreateEntity()
+    Entity Scene::CreateEntity(const std::string& name)
 	{
-		return m_Registry.create();
+		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>();
+
+		tag.Tag = name.empty() ? "Entity" : name;
+        
+		return entity;
 	}
 
 

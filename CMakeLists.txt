@@ -82,6 +82,7 @@ add_executable(base
     src/renderer/OpenGL/OpenGLFramebuffer.cpp
 
     src/scene/Scene.cpp
+    src/scene/Entity.cpp
 )
     
 

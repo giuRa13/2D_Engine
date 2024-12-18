@@ -32,11 +32,12 @@ namespace ENGINE
 		glm::vec4 m_ClearColor = { 0.1f, 0.1f, 0.1f, 1 };
 
 		Ref<Scene> m_ActiveScene;
-		entt::entity m_SquareEntity;
+		//entt::entity m_SquareEntity;
+		Entity m_SquareEntity;
 		
 		Ref<Texture2D> m_CheckerboardTexture;
-        ENGINE::Ref<ENGINE::Texture2D> m_MapTexture;
-	    ENGINE::Ref<ENGINE::SubTexture2D> m_TileTexture;
+        Ref<Texture2D> m_MapTexture;
+	    Ref<SubTexture2D> m_TileTexture;
 		
         glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 	    glm::vec3 m_SquarePosition = { 0.5f, -0.5f, 0.2 };

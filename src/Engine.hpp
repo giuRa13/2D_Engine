@@ -22,6 +22,9 @@
 #include "renderer/Framebuffer.hpp"
 
 #include "scene/Scene.hpp"
+#include "scene/Entity.hpp"
+#include "scene/Components.hpp"
+
 
 
 //#define ENGINE_BIND_EVENT_FUNC(fn) std::bind(&fn, this, std::placeholders::_1)

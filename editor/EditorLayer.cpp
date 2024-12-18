@@ -1,5 +1,4 @@
 #include "EditorLayer.hpp"
-#include "scene/Components.hpp"
 #include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,20 +14,21 @@ namespace ENGINE
 
     void EditorLayer::OnAttach()
 	{
-		m_CheckerboardTexture = ENGINE::Texture2D::Create("../assets/textures/Checkerboard.png");
-        m_MapTexture = ENGINE::Texture2D::Create("../assets/textures/16map.png");
-	    m_TileTexture = ENGINE::SubTexture2D::CreateFromCoords(m_MapTexture, { 13, 2}, {16, 16} );
+		m_CheckerboardTexture = Texture2D::Create("../assets/textures/Checkerboard.png");
+        m_MapTexture = Texture2D::Create("../assets/textures/16map.png");
+	    m_TileTexture = SubTexture2D::CreateFromCoords(m_MapTexture, { 13, 2}, {16, 16} );
 
-		ENGINE::FramebufferSpecification fbSpec;
+		FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
-		m_Framebuffer = ENGINE::Framebuffer::Create(fbSpec);
+		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		auto square = m_ActiveScene->CreateEntity();
-		m_ActiveScene->Reg().emplace<TransformComponent>(square);
-		m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		auto square = m_ActiveScene->CreateEntity("Green square");
+		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		//m_ActiveScene->Reg().emplace<TransformComponent>(square);
+		//m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 		m_SquareEntity = square;
 	}
 
@@ -38,10 +38,10 @@ namespace ENGINE
 	}
 
 
-void EditorLayer::OnUpdate(ENGINE::TimeStep ts)
+void EditorLayer::OnUpdate(TimeStep ts)
 {
     // Resize Viewport "Flash"
-	if (ENGINE::FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+	if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
 		m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
 		(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
         {
@@ -54,45 +54,45 @@ void EditorLayer::OnUpdate(ENGINE::TimeStep ts)
     {
         m_CameraController.OnUpdate(ts);
 
-        if(ENGINE::Input::IsKeyPressed(ENGINE_KEY_J))
+        if(Input::IsKeyPressed(ENGINE_KEY_J))
             m_SquarePosition.x -= m_SquareMoveSpeed *ts;
-        else if(ENGINE::Input::IsKeyPressed(ENGINE_KEY_L))
+        else if(Input::IsKeyPressed(ENGINE_KEY_L))
             m_SquarePosition.x += m_SquareMoveSpeed *ts;
-        if(ENGINE::Input::IsKeyPressed(ENGINE_KEY_K))
+        if(Input::IsKeyPressed(ENGINE_KEY_K))
             m_SquarePosition.y -= m_SquareMoveSpeed *ts;
-        else if (ENGINE::Input::IsKeyPressed(ENGINE_KEY_I))
+        else if (Input::IsKeyPressed(ENGINE_KEY_I))
             m_SquarePosition.y += m_SquareMoveSpeed *ts;
     }
 
 	static float rotation = 0.0f;
 	rotation += ts * 50.0f;
 
-	ENGINE::Renderer2D::ResetStats();
+	Renderer2D::ResetStats();
 
 	// Render
 	m_Framebuffer->Bind();
-    ENGINE::RenderCommand::SetClearColor(m_ClearColor);
-	ENGINE::RenderCommand::Clear();
+    RenderCommand::SetClearColor(m_ClearColor);
+	RenderCommand::Clear();
 
-	ENGINE::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-    /*ENGINE::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f },  m_SquareColor);
-    //ENGINE::Renderer2D::DrawQuad(m_SquarePosition, { 0.5f, 0.75f }, m_SquareColor);
-	ENGINE::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture , 10.0f, {1.0, 0.8, 0.8, 1.0});
-	ENGINE::Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_CheckerboardTexture, 5.0f);
-	//ENGINE::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.9f, 0.5f, 0.2f, 1.0f });
-	//ENGINE::Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_CheckerboardTexture, 20.0f);
+    /*Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f },  m_SquareColor);
+    //Renderer2D::DrawQuad(m_SquarePosition, { 0.5f, 0.75f }, m_SquareColor);
+	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture , 10.0f, {1.0, 0.8, 0.8, 1.0});
+	Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_CheckerboardTexture, 5.0f);
+	//Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.9f, 0.5f, 0.2f, 1.0f });
+	//Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_CheckerboardTexture, 20.0f);
 
-	ENGINE::Renderer2D::DrawQuad({ 0.0f, 0.5f, 0.0f }, { 1.0f, 1.0f }, m_MapTexture);
-	ENGINE::Renderer2D::DrawQuad(m_SquarePosition, { 1.0f, 1.0f }, m_TileTexture);*/
+	Renderer2D::DrawQuad({ 0.0f, 0.5f, 0.0f }, { 1.0f, 1.0f }, m_MapTexture);
+	Renderer2D::DrawQuad(m_SquarePosition, { 1.0f, 1.0f }, m_TileTexture);*/
 
 	m_ActiveScene->OnUpdate(ts);
 
-	ENGINE::Renderer2D::EndScene();
+	Renderer2D::EndScene();
 	m_Framebuffer->Unbind();
 }
 
-void EditorLayer::OnEvent(ENGINE::Event& e)
+void EditorLayer::OnEvent(Event& e)
 {
 	m_CameraController.OnEvent(e);
 }
@@ -144,7 +144,7 @@ void EditorLayer::OnImGuiRender()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-		    if (ImGui::MenuItem("Exit")) ENGINE::Application::Get().Close();
+		    if (ImGui::MenuItem("Exit")) Application::Get().Close();
 			ImGui::EndMenu();     
 		}
         if (ImGui::BeginMenu("Demo"))
@@ -164,7 +164,7 @@ void EditorLayer::OnImGuiRender()
     ////////////////////////////////////////////////
 	ImGui::Begin("Settings");
 
-	auto stats = ENGINE::Renderer2D::GetStats();
+	auto stats = Renderer2D::GetStats();
     //ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
     ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(66, 150, 240, 240));
 	ImGui::Text("Renderer2D Stats:");
@@ -174,18 +174,26 @@ void EditorLayer::OnImGuiRender()
 	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
     ImGui::NewLine();
-    ImGui::Separator();
-
+	
+	ImGui::Text("Clear Color");
     ImGui::ColorEdit4("Clear Color", glm::value_ptr(m_ClearColor));
-    ImGui::SameLine();
     if(ImGui::Button("Original"))
         m_ClearColor = {0.1f, 0.1f, 0.1f, 1};
+	ImGui::NewLine();
 	
-	auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
-	ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+	//auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+	if (m_SquareEntity)
+	{
+		ImGui::Separator();
+		auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("%s", tag.c_str());
+		auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+		ImGui::NewLine();
+		ImGui::Separator();
+	}
 
     ImGui::NewLine();
-    ImGui::Separator();
     uint32_t texID = m_CheckerboardTexture->GetRendererID();
     ImGui::Image((void*)texID, ImVec2{ 256.0f, 256.0f }, ImVec2{0, 1}, ImVec2{1, 0});
     ImGui::End();
