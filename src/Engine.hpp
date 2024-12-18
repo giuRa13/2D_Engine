@@ -21,6 +21,8 @@
 #include "renderer/OrthoCameraController.hpp"
 #include "renderer/Framebuffer.hpp"
 
+#include "scene/Scene.hpp"
+
 
 //#define ENGINE_BIND_EVENT_FUNC(fn) std::bind(&fn, this, std::placeholders::_1)
 //#define BIND_EVENT_FUNC(x) std::bind(&Application::x, this, std::placeholders::_1)

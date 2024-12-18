@@ -80,6 +80,8 @@ add_executable(base
     src/renderer/OpenGL/OpenGLShader.cpp
     src/renderer/OpenGL/OpenGLTexture.cpp
     src/renderer/OpenGL/OpenGLFramebuffer.cpp
+
+    src/scene/Scene.cpp
 )
     
 

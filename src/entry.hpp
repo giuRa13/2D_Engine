@@ -4,6 +4,10 @@
 #include "application.hpp"
 #include "Log.hpp"
 
+#ifdef _WIN32
+	#include <Windows.h>
+#endif
+
 extern ENGINE::Application* ENGINE::CreateApplication();
 
 int main(int argc, char** argv)

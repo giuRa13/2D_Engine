@@ -30,6 +30,9 @@ namespace ENGINE
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		glm::vec4 m_ClearColor = { 0.1f, 0.1f, 0.1f, 1 };
+
+		Ref<Scene> m_ActiveScene;
+		entt::entity m_SquareEntity;
 		
 		Ref<Texture2D> m_CheckerboardTexture;
         ENGINE::Ref<ENGINE::Texture2D> m_MapTexture;

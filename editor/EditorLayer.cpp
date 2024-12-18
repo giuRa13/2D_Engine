@@ -1,7 +1,9 @@
 #include "EditorLayer.hpp"
+#include "scene/Components.hpp"
 #include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <entt/entt.hpp>
 
 
 namespace ENGINE
@@ -21,6 +23,13 @@ namespace ENGINE
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = ENGINE::Framebuffer::Create(fbSpec);
+
+		m_ActiveScene = CreateRef<Scene>();
+
+		auto square = m_ActiveScene->CreateEntity();
+		m_ActiveScene->Reg().emplace<TransformComponent>(square);
+		m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		m_SquareEntity = square;
 	}
 
 	void EditorLayer::OnDetach()
@@ -62,13 +71,12 @@ void EditorLayer::OnUpdate(ENGINE::TimeStep ts)
 
 	// Render
 	m_Framebuffer->Bind();
-	//ENGINE::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
     ENGINE::RenderCommand::SetClearColor(m_ClearColor);
 	ENGINE::RenderCommand::Clear();
 
 	ENGINE::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-    ENGINE::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f },  m_SquareColor);
+    /*ENGINE::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f },  m_SquareColor);
     //ENGINE::Renderer2D::DrawQuad(m_SquarePosition, { 0.5f, 0.75f }, m_SquareColor);
 	ENGINE::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture , 10.0f, {1.0, 0.8, 0.8, 1.0});
 	ENGINE::Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_CheckerboardTexture, 5.0f);
@@ -76,7 +84,9 @@ void EditorLayer::OnUpdate(ENGINE::TimeStep ts)
 	//ENGINE::Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_CheckerboardTexture, 20.0f);
 
 	ENGINE::Renderer2D::DrawQuad({ 0.0f, 0.5f, 0.0f }, { 1.0f, 1.0f }, m_MapTexture);
-	ENGINE::Renderer2D::DrawQuad(m_SquarePosition, { 1.0f, 1.0f }, m_TileTexture);
+	ENGINE::Renderer2D::DrawQuad(m_SquarePosition, { 1.0f, 1.0f }, m_TileTexture);*/
+
+	m_ActiveScene->OnUpdate(ts);
 
 	ENGINE::Renderer2D::EndScene();
 	m_Framebuffer->Unbind();
@@ -165,11 +175,14 @@ void EditorLayer::OnImGuiRender()
 	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
     ImGui::NewLine();
     ImGui::Separator();
+
     ImGui::ColorEdit4("Clear Color", glm::value_ptr(m_ClearColor));
     ImGui::SameLine();
     if(ImGui::Button("Original"))
         m_ClearColor = {0.1f, 0.1f, 0.1f, 1};
-	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+	
+	auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+	ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 
     ImGui::NewLine();
     ImGui::Separator();
