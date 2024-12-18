@@ -83,6 +83,7 @@ add_executable(base
 
     src/scene/Scene.cpp
     src/scene/Entity.cpp
+    src/scene/SceneCamera.cpp
 )
     
 
