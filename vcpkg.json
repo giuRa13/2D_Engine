@@ -1,0 +1,33 @@
+{
+    "name": "base",
+    "version-string": "0.1.0",
+    "dependencies": [
+        {
+            "name": "glad"
+        },
+        {
+            "name": "opengl"
+        },
+        {
+            "name": "glfw3"
+        },
+        {
+            "name": "stb"
+        },
+        {
+            "name": "entt"
+        },
+        {
+            "name": "spdlog"
+        },
+        {
+            "name": "imgui",
+            "default-features": false,
+            "features": [
+                "glfw-binding",
+                "opengl3-binding",
+                "docking-experimental"
+            ]
+        }
+    ]
+}
