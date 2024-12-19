@@ -46,6 +46,7 @@ find_package(Stb REQUIRED)
 add_executable(base
     editor/EditorLayer.cpp
     editor/EditorApp.cpp
+    editor/panels/SceneHierarchyPanel.cpp
 
     sandbox/SandBox.cpp
     sandbox/SandBox2D.cpp

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine.hpp"
+#include "panels/SceneHierarchyPanel.hpp"
 
 
 namespace ENGINE 
@@ -37,6 +38,7 @@ namespace ENGINE
 		Entity m_CameraEntity;
 		Entity m_SecondCamera;
 		bool m_PrimaryCamera = true;
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 		
 		Ref<Texture2D> m_CheckerboardTexture;
         Ref<Texture2D> m_MapTexture;
