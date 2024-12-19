@@ -8,7 +8,7 @@
 namespace ENGINE
 {
 	EditorLayer::EditorLayer()
-		: Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f), m_SquareColor({ 0.2f, 0.3f, 0.8f, 1.0f })
+		: Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f)
 	{
 	}
 
@@ -33,10 +33,10 @@ namespace ENGINE
 		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
 		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity.AddComponent<CameraComponent>();
 
-		m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
 		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
 		cc.Primary = false;
 
@@ -189,7 +189,7 @@ namespace ENGINE
 		////////////////////////////////////////////////
 		m_SceneHierarchyPanel.OnImGuiRender();
 		
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 
 		auto stats = Renderer2D::GetStats();
 		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(66, 150, 240, 240));
@@ -201,6 +201,7 @@ namespace ENGINE
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 		ImGui::NewLine();
 		
+		ImGui::Separator();
 		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(66, 150, 240, 240));
 		ImGui::Text("Clear Color");
 		ImGui::PopStyleColor();
@@ -209,7 +210,7 @@ namespace ENGINE
 			m_ClearColor = {0.1f, 0.1f, 0.1f, 1};
 		ImGui::NewLine();
 		
-		if (m_SquareEntity)
+		/*if (m_SquareEntity)
 		{
 			ImGui::Separator();
 			auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
@@ -220,8 +221,9 @@ namespace ENGINE
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 			ImGui::NewLine();
 			ImGui::Separator();
-		}
+		}*/
 
+		ImGui::Separator();
 		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(66, 150, 240, 240));
 		ImGui::Text("Camera Controlls");
 		ImGui::PopStyleColor();

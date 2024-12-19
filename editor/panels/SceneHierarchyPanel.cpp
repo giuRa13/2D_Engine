@@ -69,6 +69,7 @@ namespace ENGINE
 
     void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
+		// Tag //////////////////////////////////////////////////////////////////////////////
         if (entity.HasComponent<TagComponent>())
 		{
 			auto& tag = entity.GetComponent<TagComponent>().Tag;
@@ -82,6 +83,7 @@ namespace ENGINE
 			}
 		}
 
+		// Transform //////////////////////////////////////////////////////////////////////////////
     	if (entity.HasComponent<TransformComponent>())
 		{
             if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
@@ -92,6 +94,7 @@ namespace ENGINE
             }
         }
 
+		// Camera //////////////////////////////////////////////////////////////////////////////
 		if (entity.HasComponent<CameraComponent>())
 		{
             if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
@@ -157,6 +160,18 @@ namespace ENGINE
 				ImGui::TreePop();
             }
         }
+
+		// Sprite/Color //////////////////////////////////////////////////////////////////////////////
+		if (entity.HasComponent<SpriteRendererComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			{
+				auto& src = entity.GetComponent<SpriteRendererComponent>();
+				ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
+				ImGui::TreePop();
+			}
+		}
+
     }
 
 }
