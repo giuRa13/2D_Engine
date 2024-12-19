@@ -30,6 +30,9 @@ namespace ENGINE
 		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 		m_SquareEntity = square;
 
+		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
+		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
 		m_CameraEntity.AddComponent<CameraComponent>();
 
@@ -88,20 +91,6 @@ namespace ENGINE
 			}
 
 		// Update
-		/*if (m_ViewportFocused)
-		{
-			m_CameraController.OnUpdate(ts);
-
-			if(Input::IsKeyPressed(ENGINE_KEY_J))
-				m_SquarePosition.x -= m_SquareMoveSpeed *ts;
-			else if(Input::IsKeyPressed(ENGINE_KEY_L))
-				m_SquarePosition.x += m_SquareMoveSpeed *ts;
-			if(Input::IsKeyPressed(ENGINE_KEY_K))
-				m_SquarePosition.y -= m_SquareMoveSpeed *ts;
-			else if (Input::IsKeyPressed(ENGINE_KEY_I))
-				m_SquarePosition.y += m_SquareMoveSpeed *ts;
-		}*/
-
 		static float rotation = 0.0f;
 		rotation += ts * 50.0f;
 
@@ -111,7 +100,6 @@ namespace ENGINE
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor(m_ClearColor);
 		RenderCommand::Clear();
-
 		//Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 		/*Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f },  m_SquareColor);
