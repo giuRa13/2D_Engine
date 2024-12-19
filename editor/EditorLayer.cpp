@@ -46,24 +46,25 @@ namespace ENGINE
 		public:
 			void OnCreate()
 			{
-				//auto& transform = GetComponent<TransformComponent>().Transform;
-				//transform[3][0] = rand() % 10 - 5.0f;
+				//auto& translation = GetComponent<TransformComponent>().Translation;
+				//translation.x = rand() % 10 - 5.0f;
 			}
 			void OnDestroy()
 			{
 			}
 			void OnUpdate(TimeStep ts)
 			{
-				auto& transform = GetComponent<TransformComponent>().Transform;
+				auto& translation = GetComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
+
 				if (Input::IsKeyPressed(ENGINE_KEY_A))
-					transform[3][0] -= speed * ts; // [3] = third column of the matrix, [0] = x
+					translation.x -= speed * ts; // [3] = third column of the matrix, [0] = x
 				if (Input::IsKeyPressed(ENGINE_KEY_D))
-					transform[3][0] += speed * ts;
+					translation.x  += speed * ts;
 				if (Input::IsKeyPressed(ENGINE_KEY_W))
-					transform[3][1] += speed * ts;
+					translation.y += speed * ts;
 				if (Input::IsKeyPressed(ENGINE_KEY_S))
-					transform[3][1] -= speed * ts;
+					translation.y -= speed * ts;
 			}
 		};
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
@@ -222,26 +223,6 @@ namespace ENGINE
 			ImGui::NewLine();
 			ImGui::Separator();
 		}*/
-
-		ImGui::Separator();
-		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(66, 150, 240, 240));
-		ImGui::Text("Camera Controlls");
-		ImGui::PopStyleColor();
-		ImGui::DragFloat3("Camera Transform",
-			glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-		{
-			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-		}
-		{
-			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
-				camera.SetOrthographicSize(orthoSize);
-		}
-		ImGui::NewLine();
-		ImGui::Separator();
 
 		ImGui::NewLine();
 		uint64_t texID = m_CheckerboardTexture->GetRendererID();
