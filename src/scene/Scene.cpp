@@ -10,21 +10,7 @@ namespace ENGINE
 
 	Scene::Scene()
 	{
-		/*entt::entity entity = m_Registry.create();
-		m_Registry.emplace<TransformComponent>(entity, glm::mat4(1.0f));
-		m_Registry.on_construct<TransformComponent>().connect<&OnTransformConstruct>();
-		if (m_Registry.has<TransformComponent>(entity))
-			TransformComponent& transform = m_Registry.get<TransformComponent>(entity);
-		auto view = m_Registry.view<TransformComponent>();
-		for (auto entity : view)
-		{
-			TransformComponent& transform = view.get<TransformComponent>(entity);
-		}
-		auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
-		for (auto entity : group)
-		{
-			auto&[transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
-		}*/
+
 	}
 
 	Scene::~Scene()
@@ -40,6 +26,11 @@ namespace ENGINE
 		tag.Tag = name.empty() ? "Entity" : name;
 
 		return entity;
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
 	}
 
 
@@ -105,6 +96,34 @@ namespace ENGINE
 			Renderer2D::EndScene();
 		}
 		
+	}
+
+
+	template<typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component)
+	{
+		//static_assert(false);
+	}
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+	template<>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
 	}
 
 }
