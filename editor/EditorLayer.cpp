@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <entt/entt.hpp>
+#include <scene/SceneSerializer.hpp>
 
 
 namespace ENGINE
@@ -71,6 +72,9 @@ namespace ENGINE
 		m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Serialize("../assets/scenes/Example.engine");
 	}
 
 	void EditorLayer::OnDetach()

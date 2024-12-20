@@ -35,6 +35,7 @@ find_package(EnTT CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Stb REQUIRED)
+find_package(yaml-cpp CONFIG REQUIRED)
 #find_package(fmt CONFIG REQUIRED)
 
 
@@ -85,6 +86,7 @@ add_executable(base
     src/scene/Scene.cpp
     src/scene/Entity.cpp
     src/scene/SceneCamera.cpp
+    src/scene/SceneSerializer.cpp
 )
     
 
@@ -113,6 +115,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 #target_link_libraries(${PROJECT_NAME} PRIVATE external_lib)
 #target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)
+target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp::yaml-cpp)
+
 
 
 target_compile_options(

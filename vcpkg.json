@@ -21,6 +21,9 @@
             "name": "spdlog"
         },
         {
+            "name": "yaml-cpp"
+        },
+        {
             "name": "imgui",
             "default-features": false,
             "features": [
