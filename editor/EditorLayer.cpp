@@ -161,11 +161,16 @@ namespace ENGINE
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSize = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f; // if is a docking window
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+
+		style.WindowMinSize.x = minWinSize; // set back to default
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -179,6 +184,19 @@ namespace ENGINE
 				
 				if (ImGui::MenuItem("Close")) showDemo = false;
 				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Theme"))
+			{
+				auto imGuiLayer = Application::Get().GetImGuiLayer();
+
+				if (ImGui::MenuItem("Theme 1"))
+				{
+					imGuiLayer->SetDefaultTheme();
+					imGuiLayer->SetThemeColors();
+				} 
+				if (ImGui::MenuItem("Theme 2")) imGuiLayer->SetTheme2();
+				if (ImGui::MenuItem("Default")) imGuiLayer->SetDefaultTheme();
+				ImGui::EndMenu();     
 			}
 
 			ImGui::EndMenuBar();
@@ -225,6 +243,7 @@ namespace ENGINE
 		}*/
 
 		ImGui::NewLine();
+		ImGui::SameLine(ImGui::GetWindowWidth() /6);
 		uint64_t texID = m_CheckerboardTexture->GetRendererID();
 		ImGui::Image(reinterpret_cast<void*>(texID), ImVec2{ 256.0f, 256.0f }, ImVec2{0, 1}, ImVec2{1, 0});
 		ImGui::End();

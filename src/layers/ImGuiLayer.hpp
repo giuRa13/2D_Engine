@@ -20,6 +20,10 @@ namespace ENGINE
         void Begin();
         void End();
 
+		void SetThemeColors();
+		void SetTheme2();
+		void SetDefaultTheme();
+
 	private:
 		float m_Time = 0.0f;
 		bool m_BlockEvents = true;
