@@ -25,7 +25,7 @@ namespace ENGINE
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		m_ActiveScene = CreateRef<Scene>();
-
+#if 0
 		// Entities
 		auto square = m_ActiveScene->CreateEntity("Green square");
 		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
@@ -70,11 +70,8 @@ namespace ENGINE
 		};
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
+#endif
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Serialize("../assets/scenes/Example.engine");
 	}
 
 	void EditorLayer::OnDetach()
@@ -179,16 +176,31 @@ namespace ENGINE
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("Serialize"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Serialize("../assets/scenes/Example.engine");
+				}
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Deserialize("../assets/scenes/Example.engine");
+				}
+
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+
 				ImGui::EndMenu();     
 			}
+
 			if (ImGui::BeginMenu("Demo"))
 			{
 				if (ImGui::MenuItem("Open")) showDemo = true;
 				
 				if (ImGui::MenuItem("Close")) showDemo = false;
+
 				ImGui::EndMenu();
 			}
+
 			if (ImGui::BeginMenu("Theme"))
 			{
 				auto imGuiLayer = Application::Get().GetImGuiLayer();
@@ -200,6 +212,7 @@ namespace ENGINE
 				} 
 				if (ImGui::MenuItem("Theme 2")) imGuiLayer->SetTheme2();
 				if (ImGui::MenuItem("Default")) imGuiLayer->SetDefaultTheme();
+
 				ImGui::EndMenu();     
 			}
 
