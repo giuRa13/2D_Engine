@@ -33,6 +33,7 @@ find_package(EnTT CONFIG REQUIRED)
 #find_package(SDL2_image CONFIG REQUIRED)
 #find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+find_package(imguizmo CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
@@ -89,6 +90,7 @@ add_executable(base
     src/scene/Entity.cpp
     src/scene/SceneCamera.cpp
     src/scene/SceneSerializer.cpp
+    src/scene/Math.cpp
 )
     
 
@@ -114,6 +116,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE EnTT::EnTT)
 #target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image)
 #target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_mixer)
 target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE imguizmo::imguizmo)
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 #target_link_libraries(${PROJECT_NAME} PRIVATE external_lib)
 #target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)

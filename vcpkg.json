@@ -27,6 +27,9 @@
             "name": "nativefiledialog-extended"
         },
         {
+            "name": "imguizmo"
+        },
+        {
             "name": "imgui",
             "default-features": false,
             "features": [

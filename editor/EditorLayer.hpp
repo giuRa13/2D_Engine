@@ -16,7 +16,6 @@ namespace ENGINE
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		void OnUpdate(TimeStep ts) override;
-
 		virtual void OnImGuiRender() override;
 
 		void OnEvent(Event& e) override;
@@ -27,7 +26,7 @@ namespace ENGINE
 		void NewScene();
 		void OpenScene();
 		void SaveSceneAs();
-		
+
 		ENGINE::OrthographicCameraController m_CameraController;
 		// Temp
 		Ref<VertexArray> m_SquareVA;
@@ -39,12 +38,12 @@ namespace ENGINE
 		bool showDemo = false;
 
 		Ref<Scene> m_ActiveScene;
-		//entt::entity m_SquareEntity;
 		Entity m_SquareEntity;
 		Entity m_CameraEntity;
 		Entity m_SecondCamera;
 		bool m_PrimaryCamera = true;
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		int m_GizmoType = -1;
 		
 		Ref<Texture2D> m_CheckerboardTexture;
         Ref<Texture2D> m_MapTexture;
