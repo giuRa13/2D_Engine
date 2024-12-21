@@ -36,6 +36,7 @@ find_package(imgui CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
+find_package(nfd CONFIG REQUIRED)
 #find_package(fmt CONFIG REQUIRED)
 
 
@@ -47,6 +48,7 @@ find_package(yaml-cpp CONFIG REQUIRED)
 add_executable(base
     editor/EditorLayer.cpp
     editor/EditorApp.cpp
+    editor/FileDialog.cpp
     editor/panels/SceneHierarchyPanel.cpp
 
     sandbox/SandBox.cpp
@@ -116,6 +118,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 #target_link_libraries(${PROJECT_NAME} PRIVATE external_lib)
 #target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)
 target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp::yaml-cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE nfd::nfd)
+
 
 
 

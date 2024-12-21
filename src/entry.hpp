@@ -9,6 +9,7 @@
 	#define NOMINMAX
 #endif
 
+
 extern ENGINE::Application* ENGINE::CreateApplication();
 
 int main(int argc, char** argv)

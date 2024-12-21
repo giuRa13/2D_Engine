@@ -5,12 +5,23 @@
 #include <entt/entt.hpp>
 #include <scene/SceneSerializer.hpp>
 
+#include "FileDialog.hpp"
+#include <iostream>
+#include "nfd.hpp"
+
+
+#define GLFW_NATIVE_INCLUDE_NONE
+#include <GLFW/glfw3native.h>
+#include <nfd_glfw3.h>
+
 
 namespace ENGINE
 {
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f)
 	{
+		//OPENFILENAMEA ofn;
+		//NFD_GetNativeWindowFromGLFWWindow((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), NULL);
 	}
 
     void EditorLayer::OnAttach()
@@ -122,9 +133,77 @@ namespace ENGINE
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(ENGINE_BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
+	}
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		if(e.GetRepeatCount() > 0)
+			return false;
+
+		bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
+
+		switch(e.GetKeyCode())
+		{
+			case Key::N:
+			{
+				if (control)
+					NewScene();
+				break;
+			}
+			case Key::O:
+			{
+				if (control)
+					OpenScene();
+				break;
+			}
+			case Key::S:
+			{
+				if (control)
+					SaveSceneAs();
+				break;
+			}
+		}
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+	}
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialog::OpenFile({".engine"} );
+
+		if(!filepath.empty())
+		{
+			ENGINE_CORE_INFO("Serializing Scene...");
+
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
+	}
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialog::SaveFile({".engine"} );
+
+		if(!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
 	}
 
 
+	// ImGui ///////////////////////////////////////////////////////////////////////////7
 	void EditorLayer::OnImGuiRender()
 	{
 		static bool dockspaceOpen = true;
@@ -176,7 +255,7 @@ namespace ENGINE
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Serialize"))
+				/*if (ImGui::MenuItem("Serialize"))
 				{
 					SceneSerializer serializer(m_ActiveScene);
 					serializer.Serialize("../assets/scenes/Example.engine");
@@ -185,6 +264,19 @@ namespace ENGINE
 				{
 					SceneSerializer serializer(m_ActiveScene);
 					serializer.Deserialize("../assets/scenes/Example.engine");
+				}*/
+
+				if (ImGui::MenuItem("New", "Ctrl+N")) 
+				{
+					NewScene();
+				}
+				if (ImGui::MenuItem("Open", "Ctrl+O")) 
+				{
+					OpenScene();
+				}
+				if (ImGui::MenuItem("Save As...", "Ctrl+S")) 
+				{
+					SaveSceneAs();
 				}
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();

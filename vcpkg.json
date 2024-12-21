@@ -24,6 +24,9 @@
             "name": "yaml-cpp"
         },
         {
+            "name": "nativefiledialog-extended"
+        },
+        {
             "name": "imgui",
             "default-features": false,
             "features": [

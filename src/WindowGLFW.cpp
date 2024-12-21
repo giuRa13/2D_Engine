@@ -4,6 +4,7 @@
 #include "renderer/OpenGL/OpenGLContext.hpp"
 #include "events/KeyEvent.hpp"
 #include "events/MouseEvent.hpp"
+#include <nfd.h>
 
 
 namespace ENGINE 
@@ -51,6 +52,11 @@ namespace ENGINE
             glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
+
+        if (NFD_Init() != NFD_OKAY) 
+        {
+            ENGINE_CORE_ERROR("Could not intialize NFD!");
+        }
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -157,6 +163,7 @@ namespace ENGINE
 
 	void WindowGLFW::Shutdown()
 	{
+        NFD_Quit();
         ENGINE_CORE_INFO("GLFW Window closed");
 		glfwDestroyWindow(m_Window);
 	}
